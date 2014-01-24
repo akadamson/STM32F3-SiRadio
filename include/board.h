@@ -46,6 +46,7 @@
 #include "utilities.h"
 //#include "watchdogs.h"
 #include "aprs.h"
+//#include "afsk.h"
 #include "ax25.h"
 #include "gps.h"
 

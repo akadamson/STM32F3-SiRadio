@@ -243,18 +243,17 @@ void parse_altitude(const char *token)
     new_altitude = atof(token);
 }
 
-
 //
 // Exported functions
 //
-void gps_setup()
+void gpsInit()
 {
     strcpy(gps_time, "000000");
     strcpy(gps_aprs_lat, "0000.00N");
     strcpy(gps_aprs_lon, "00000.00E");
 }
 
-bool gps_decode(char c)
+bool gpsDecode(char c)
 {
     int ret = false;
 
@@ -268,7 +267,7 @@ bool gps_decode(char c)
             if (num_tokens && our_checksum == their_checksum)
             {
 #ifdef DEBUG_GPS
-                cliPrintF(" (OK!) %ld", millis())
+                cliPrintF(" (OK!) %ld", millis());
                 //Serial.print(" (OK!) ");
                 //Serial.print(millis());
 #endif
@@ -326,12 +325,9 @@ bool gps_decode(char c)
             }
 
 #ifdef DEBUG_GPS
-
             if (num_tokens)
                 cliPrint("\n");
-
             //Serial.println();
-
 #endif
             at_checksum = false;        // CR/LF signals the end of the checksum
             our_checksum = '$';         // Reset checksums

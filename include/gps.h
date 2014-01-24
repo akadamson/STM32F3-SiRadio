@@ -28,5 +28,5 @@ extern float gps_course;
 extern float gps_speed;
 extern float gps_altitude;
 
-void gps_setup(void);
-bool gps_decode(char c);
+void gpsInit(void);
+bool gpsDecode(char c);

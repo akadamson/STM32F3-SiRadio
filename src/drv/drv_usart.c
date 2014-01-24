@@ -125,7 +125,7 @@ void uartInit(void)
 
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1,     ENABLE);  // USART1
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);  // Telemetry
-    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE); // TX/RX pin
+    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);     // TX/RX pin
 
     GPIO_InitStructure.GPIO_Pin   = UART1_TX_PIN | UART1_RX_PIN;
     GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_AF;
@@ -146,7 +146,7 @@ void uartInit(void)
 
     NVIC_Init(&NVIC_InitStructure);
 
-    USART_InitStructure.USART_BaudRate            = 115200;
+    USART_InitStructure.USART_BaudRate            = GPS_BAUDRATE;
     USART_InitStructure.USART_WordLength          = USART_WordLength_8b;
     USART_InitStructure.USART_StopBits            = USART_StopBits_1;
     USART_InitStructure.USART_Parity              = USART_Parity_No;

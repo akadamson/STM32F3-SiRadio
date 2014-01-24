@@ -34,7 +34,7 @@ float meters_to_feet(float m)
 }
 
 // Exported functions
-void aprs_send()
+void aprsSend()
 {
 
     char temp[12];                   // Temperature (int/ext)
@@ -81,6 +81,8 @@ void aprs_send()
     ax25_send_string(APRS_COMMENT);     // Comment
     ax25_send_footer();
 
+#if 0
     ax25_flush_frame();                 // Tell the modem to go
     afsk_set_frequency(RADIO_FREQ);
+#endif
 }

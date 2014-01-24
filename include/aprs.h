@@ -17,4 +17,4 @@
 
 #pragma once
 
-void aprs_send(void);
+void aprsSend(void);

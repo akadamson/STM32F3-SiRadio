@@ -116,6 +116,11 @@ int main(void)
             deltaTime50Hz    = currentTime - previous50HzTime;
             previous50HzTime = currentTime;
 
+            while (uartAvailable())
+            {
+                gpsDecode((char)uartRead());
+            }
+
             executionTime50Hz = micros() - currentTime;
         }
 
@@ -143,6 +148,8 @@ int main(void)
             currentTime     = micros();
             deltaTime5Hz    = currentTime - previous5HzTime;
             previous5HzTime = currentTime;
+
+            aprsSend();
 
             executionTime5Hz = micros() - currentTime;
         }

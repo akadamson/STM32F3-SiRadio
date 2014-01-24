@@ -159,7 +159,7 @@ void ax25_send_header(const struct s_address *addresses, int num_addresses)
 
     if (addresses[1].ssid)
     {
-        cliPrintF("-%c", addresses[1].ssid);
+        cliPrintF("-%d", addresses[1].ssid);
         //Serial.print('-');
         //Serial.print((unsigned int)addresses[1].ssid);
     }
@@ -171,7 +171,7 @@ void ax25_send_header(const struct s_address *addresses, int num_addresses)
 
     if (addresses[0].ssid)
     {
-        cliPrintF("-%c", addresses[0].ssid);
+        cliPrintF("-%d", addresses[0].ssid);
         //Serial.print('-');
         //Serial.print((unsigned int)addresses[0].ssid);
     }
@@ -184,7 +184,7 @@ void ax25_send_header(const struct s_address *addresses, int num_addresses)
 
         if (addresses[i].ssid)
         {
-            cliPrintF("-%c", addresses[i].ssid);
+            cliPrintF("-%d", addresses[i].ssid);
             //Serial.print('-');
             //Serial.print((unsigned int)addresses[i].ssid);
         }
@@ -215,6 +215,8 @@ void ax25_send_footer(void)
 void ax25_flush_frame(void)
 {
     // Key the transmitter and send the frame
+#if 0
     afsk_send(packet, packet_size);
     afsk_start();
+#endif
 }

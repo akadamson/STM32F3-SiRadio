@@ -241,6 +241,7 @@ void systemInit(void)
     cliInit();
     uartInit();
     gpioInit();
+    gpsInit();
     ledInit(LED0);
     si446xInit();
 
