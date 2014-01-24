@@ -76,7 +76,7 @@
 
 /*#define CTR_CALLBACK*/
 /*#define DOVR_CALLBACK*/
-/*#define ERR_CALLBACK*/
+#define ERR_CALLBACK
 /*#define WKUP_CALLBACK*/
 /*#define SUSP_CALLBACK*/
 /*#define RESET_CALLBACK*/

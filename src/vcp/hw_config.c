@@ -39,6 +39,8 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+static tVCPConnectMode VCPconnectMode = eVCPConnectReset;
+
 ErrorStatus HSEStartUpStatus;
 EXTI_InitTypeDef EXTI_InitStructure;
 __IO uint32_t packetSent;                                     // HJI
@@ -78,7 +80,7 @@ void Set_System(void)
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 #endif /* STM32L1XX_XD */
 
-    /*Pull down PA12 to create USB Disconnect Pulse*/     // HJI
+    /*Pull down DISCONNECT PIN to create USB Disconnect Pulse*/     // HJI
 #if defined(STM32F30X)                                    // HJI
     RCC_AHBPeriphClockCmd(USB_DISCONNECT_CLK, ENABLE);   // HJI
 
@@ -105,7 +107,7 @@ void Set_System(void)
 
 #if defined(STM32F37X) || defined(STM32F30X)
 
-    /*Set PA11,12 as IN - USB_DM,DP*/
+    /*Set PA11, 12 as IN - USB_DM,DP*/
     RCC_AHBPeriphClockCmd(USB_DM_CLK, ENABLE);
     GPIO_InitStructure.GPIO_Pin = USB_DM_PIN | USB_DP_PIN;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -285,9 +287,9 @@ uint32_t CDC_Send_DATA(uint8_t *ptrBuffer, uint8_t sendLength)
     }
 
     // We can only put 64 bytes in the buffer
-    if (sendLength > 64 / 2)
+    if (sendLength > 64)
     {
-        sendLength = 64 / 2;
+        sendLength = 64;
     }
 
     // Try to load some bytes if we can
@@ -360,7 +362,35 @@ uint8_t usbIsConfigured()
 *******************************************************************************/
 uint8_t usbIsConnected()
 {
-    return (bDeviceState != UNCONNECTED);
+    return VCPconnectMode == eVCPConnectData;
+    //return (bDeviceState != UNCONNECTED);
+}
+
+void ERR_Callback(void)
+{
+    //printUSART("\r\n ERR_Callback"); // ala42
+    bDeviceState = UNCONNECTED;
+    SetVCPConnectMode(eVCPConnectReset);
+}
+
+//#include "ringbuffer.h"
+//extern tRingBuffer RingBufferUSBTX;
+void SetVCPConnectMode(tVCPConnectMode mode)
+{
+    if(VCPconnectMode != mode) {
+        //printUSART("\r\nVCPConnectMode changed from %d to %d at time %u, rbw %d rbr %d\r\n",
+        //	VCPconnectMode, mode, micros(), RingBufferUSBTX.Write, RingBufferUSBTX.Read);
+    }
+    VCPconnectMode = mode;
+
+    if(usbIsConnected()) {
+      packetSent = 0;
+    }
+}
+
+tVCPConnectMode GetVCPConnectMode(void)
+{
+    return VCPconnectMode;
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

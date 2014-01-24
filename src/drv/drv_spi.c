@@ -111,7 +111,7 @@ void spiInit(SPI_TypeDef *SPIx)
     if (SPIx == SPI1)
     {
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
-        RCC_AHBPeriphClockCmd(SPI1_SCK_CLK | SPI1_MISO_CLK | SPI1_MOSI_CLK, ENABLE);
+        RCC_AHBPeriphClockCmd(SPI1_SCK_CLK | SPI1_MISO_CLK| SPI1_MOSI_CLK | SI446x_CS_GPIO_CLK, ENABLE);
 
         GPIO_PinAFConfig(SPI1_GPIO, SPI1_SCK_PIN_SOURCE,  GPIO_AF_5);
         GPIO_PinAFConfig(SPI1_GPIO, SPI1_MISO_PIN_SOURCE, GPIO_AF_5);
@@ -126,7 +126,7 @@ void spiInit(SPI_TypeDef *SPIx)
 
         GPIO_Init(SPI1_GPIO, &GPIO_InitStructure);
 
-        RCC_AHBPeriphClockCmd(SI446x_CS_PIN, ENABLE);
+        //RCC_AHBPeriphClockCmd(SI446x_CS_GPIO_CLK, ENABLE);
 
         GPIO_InitStructure.GPIO_Pin   = SI446x_CS_PIN;
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_OUT;
@@ -139,20 +139,20 @@ void spiInit(SPI_TypeDef *SPIx)
         GPIO_SetBits(SI446x_CS_GPIO_PORT, SI446x_CS_PIN);
 
         SPI_I2S_DeInit(SPI1);
-
-        SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
+        SPI_StructInit(&SPI_InitStructure);
+        //SPI_InitStructure.SPI_Direction         = SPI_Direction_2Lines_FullDuplex;
         SPI_InitStructure.SPI_Mode              = SPI_Mode_Master;
-        SPI_InitStructure.SPI_DataSize          = SPI_DataSize_8b;
-        SPI_InitStructure.SPI_CPOL              = SPI_CPOL_Low;
-        SPI_InitStructure.SPI_CPHA              = SPI_CPHA_1Edge;
+        //SPI_InitStructure.SPI_DataSize          = SPI_DataSize_8b;
+        //SPI_InitStructure.SPI_CPOL              = SPI_CPOL_Low;
+        //SPI_InitStructure.SPI_CPHA              = SPI_CPHA_1Edge;
         SPI_InitStructure.SPI_NSS               = SPI_NSS_Soft;
-        SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_4;  // 36/4 = 9 MHz SPI Clock
-        SPI_InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
-        SPI_InitStructure.SPI_CRCPolynomial     = 7;
+        SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;  // 72/8 = 9 MHz SPI Clock
+        //SPI_InitStructure.SPI_FirstBit          = SPI_FirstBit_MSB;
+        //SPI_InitStructure.SPI_CRCPolynomial     = 7;
 
         SPI_Init(SPI1, &SPI_InitStructure);
 
-        SPI_RxFIFOThresholdConfig(SI446x_SPI, SPI_RxFIFOThreshold_QF);
+        SPI_RxFIFOThresholdConfig(SPI1, SPI_RxFIFOThreshold_QF);
 
         SPI_Cmd(SPI1, ENABLE);
     }
@@ -299,6 +299,9 @@ uint8_t spiTransfer(SPI_TypeDef *SPIx, uint8_t data)
         if ((spiTimeout--) == 0) return spiTimeoutUserCallback(SPIx);
 
     SPI_SendData8(SPIx, data);
+
+    while (SPI_I2S_GetFlagStatus(SPIx, SPI_I2S_FLAG_BSY) == SET)
+        ;
 
     spiTimeout = 0x1000;
 

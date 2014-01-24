@@ -9,6 +9,7 @@
 
 void gpioInit(void)
 {
+#ifdef DEBUG_TIM2
     GPIO_InitTypeDef GPIO_InitStructure;
 
     /* TIM3_CH2_CLK Clocks enable */
@@ -22,4 +23,5 @@ void gpioInit(void)
     GPIO_InitStructure.GPIO_PuPd    = GPIO_PuPd_UP;
 
     GPIO_Init(TIM2D_GPIO_PORT, &GPIO_InitStructure);
+#endif
 }

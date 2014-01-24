@@ -39,10 +39,14 @@
 #include "drv_si446x.h"
 #include "drv_usart.h"
 
+#include "config.h"
 #include "main.h"
 //#include "evr.h"
 #include "cli.h"
 #include "utilities.h"
 //#include "watchdogs.h"
+#include "aprs.h"
+#include "ax25.h"
+#include "gps.h"
 
 ///////////////////////////////////////////////////////////////////////////////

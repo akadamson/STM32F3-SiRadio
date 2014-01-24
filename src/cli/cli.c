@@ -120,6 +120,22 @@ void cliCom(void)
     {
             ///////////////////////////////
 
+        case 'a': // Not Used
+
+            cliQuery = 'x';
+            validCliCommand = false;
+            break;
+
+         ///////////////////////////////
+
+
+        case 'b': // Not Used
+
+            cliQuery = 'x';
+            validCliCommand = false;
+            break;
+
+         ///////////////////////////////
         case 'e': // Loop Delta Times
             cliPrintF("%7ld, %7ld, %7ld, %7ld, %7ld, %7ld, %7ld\n", deltaTime1000Hz,
                       deltaTime500Hz,
@@ -146,7 +162,36 @@ void cliCom(void)
 
             ///////////////////////////////
 
+        case 'g': // Not Used
+            cliPrintF("spiErrors: %04d\n", spiGetErrorCounter(SI446x_SPI));
+
+            cliQuery = 'x';
+            validCliCommand = false;
+            break;
+
+            ///////////////////////////////
+
         case 'q': // Not Used
+            cliQuery = 'x';
+            validCliCommand = false;
+            break;
+
+            ///////////////////////////////
+
+        case 's': // Not Used
+            cliPrint("TX off\n");
+            si446xPTTOff();
+
+            cliQuery = 'x';
+            validCliCommand = false;
+            break;
+
+             ///////////////////////////////
+
+        case 't': // Not Used
+            cliPrint("TX on\n");
+            si446xPTTOn();
+
             cliQuery = 'x';
             validCliCommand = false;
             break;

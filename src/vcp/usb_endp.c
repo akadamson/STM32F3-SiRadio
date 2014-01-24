@@ -54,8 +54,8 @@ __IO uint32_t receiveLength;             // HJI
 * Output         : None.
 * Return         : None.
 *******************************************************************************/
-
-void EP1_IN_Callback(void)
+void EP1_IN_Callback(void) __attribute__ ((weak)); //ala42
+void EP1_IN_Callback (void)
 {
     packetSent = 0;  // HJI
 }

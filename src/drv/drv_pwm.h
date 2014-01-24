@@ -7,12 +7,8 @@
 
 #pragma once
 
-#define R 107374182
-
-extern uint16_t sin_table[];
-extern uint16_t pulse_width;
-extern uint32_t phase_accumulator;
-extern uint8_t angle;
+#define R 42949672
+//107374182
 
 void pwmTim3_Channel4Init(void);
 void setPWM_dutycycle(uint16_t channel, uint16_t dutycycle);

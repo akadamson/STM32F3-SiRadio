@@ -254,6 +254,7 @@ void Virtual_Com_Port_Status_Out(void)
 *******************************************************************************/
 RESULT Virtual_Com_Port_Data_Setup(uint8_t RequestNo)
 {
+  SetVCPConnectMode(eVCPConnectData);
     uint8_t    *(*CopyRoutine)(uint16_t);
 
     CopyRoutine = NULL;
@@ -295,6 +296,7 @@ RESULT Virtual_Com_Port_Data_Setup(uint8_t RequestNo)
 *******************************************************************************/
 RESULT Virtual_Com_Port_NoData_Setup(uint8_t RequestNo)
 {
+  SetVCPConnectMode(eVCPConnectNoData);
 
     if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
     {
