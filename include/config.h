@@ -225,6 +225,6 @@
 
 //#define DEBUG_GPS    // GPS sentence dump and checksum validation
 //#define DEBUG_AX25   // AX.25 frame dump
-// #define DEBUG_MODEM  // Modem ISR overrun and profiling
+//#define DEBUG_MODEM  // Modem ISR overrun and profiling
 // #define DEBUG_RESET  // AVR reset
 // #define DEBUG_SENS   // Sensors

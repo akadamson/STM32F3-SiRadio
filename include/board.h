@@ -19,6 +19,8 @@
 #include "stm32f30x.h"
 //#include "stm32f30x_conf.h"
 
+#include "config.h"
+
 #include "arm_math.h"
 
 #include "hw_config.h"
@@ -39,14 +41,13 @@
 #include "drv_si446x.h"
 #include "drv_usart.h"
 
-#include "config.h"
 #include "main.h"
 //#include "evr.h"
 #include "cli.h"
 #include "utilities.h"
 //#include "watchdogs.h"
 #include "aprs.h"
-//#include "afsk.h"
+#include "afsk.h"
 #include "ax25.h"
 #include "gps.h"
 

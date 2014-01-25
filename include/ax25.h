@@ -23,8 +23,9 @@ struct s_address
     unsigned char ssid;
 };
 
-void ax25_send_header(const struct s_address *addresses, int num_addresses);
-void ax25_send_byte(unsigned char byte);
-void ax25_send_string(const char *string);
-void ax25_send_footer(void);
-void ax25_flush_frame(void);
+void ax25SendHeader(const struct s_address *addresses, int num_addresses);
+void ax25SendByte(unsigned char byte);
+void ax25SendString(const char *string);
+void ax25SendFooter(void);
+void ax25FlushFrame(void);
+

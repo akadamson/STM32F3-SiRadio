@@ -321,7 +321,7 @@ void si446xPTTOff(void)
     si446xSendRecv(8, 1, gpio_pin_cfg_command0);
 
     si446xSDNEnable();  // active high = shutdown
-    //si446xVCXODisable(); // keep enabled for now
+    si446xVCXODisable(); // keep enabled for now
 }
 
 void si446xSetFreq(uint32_t freq)

@@ -149,8 +149,6 @@ int main(void)
             deltaTime5Hz    = currentTime - previous5HzTime;
             previous5HzTime = currentTime;
 
-            aprsSend();
-
             executionTime5Hz = micros() - currentTime;
         }
 
@@ -164,8 +162,12 @@ int main(void)
             deltaTime1Hz    = currentTime - previous1HzTime;
             previous1HzTime = currentTime;
 
-            if (execUp == true)
+            if (execUp == true) {
                 ledToggle(LED0);
+#ifdef DEBUG_MODEM
+                afskDebug();
+#endif
+            }
 
             if (execUp == false)
                 execUpCount++;

@@ -50,39 +50,37 @@ void aprsSend()
 #endif
     };
 
-    ax25_send_header(addresses, sizeof(addresses) / sizeof(struct s_address));
-    ax25_send_byte('/');                // Report w/ timestamp, no APRS messaging. $ = NMEA raw data
-    // ax25_send_string("021709z");     // 021709z = 2nd day of the month, 17:09 zulu (UTC/GMT)
-    ax25_send_string(gps_time);         // 170915 = 17h:09m:15s zulu (not allowed in Status Reports)
-    ax25_send_byte('h');
-    ax25_send_string(gps_aprs_lat);     // Lat: 38deg and 22.20 min (.20 are NOT seconds, but 1/100th of minutes)
-    ax25_send_byte(APRS_SYMBOL_TABLE);                // Symbol table
-    ax25_send_string(gps_aprs_lon);     // Lon: 000deg and 25.80 min
-    ax25_send_byte(APRS_SYMBOL_ID);                // Symbol: /O=balloon, /-=QTH, \N=buoy
+    ax25SendHeader(addresses, sizeof(addresses) / sizeof(struct s_address));
+    ax25SendByte('/');                // Report w/ timestamp, no APRS messaging. $ = NMEA raw data
+    // ax25SendString("021709z");     // 021709z = 2nd day of the month, 17:09 zulu (UTC/GMT)
+    ax25SendString(gps_time);         // 170915 = 17h:09m:15s zulu (not allowed in Status Reports)
+    ax25SendByte('h');
+    ax25SendString(gps_aprs_lat);     // Lat: 38deg and 22.20 min (.20 are NOT seconds, but 1/100th of minutes)
+    ax25SendByte(APRS_SYMBOL_TABLE);                // Symbol table
+    ax25SendString(gps_aprs_lon);     // Lon: 000deg and 25.80 min
+    ax25SendByte(APRS_SYMBOL_ID);                // Symbol: /O=balloon, /-=QTH, \N=buoy
     snprintf(temp, 4, "%03d", (int)(gps_course + 0.5));
-    ax25_send_string(temp);             // Course (degrees)
-    ax25_send_byte('/');                // and
+    ax25SendString(temp);             // Course (degrees)
+    ax25SendByte('/');                // and
     snprintf(temp, 4, "%03d", (int)(gps_speed + 0.5));
-    ax25_send_string(temp);             // speed (knots)
-    ax25_send_string("/A=");            // Altitude (feet). Goes anywhere in the comment area
+    ax25SendString(temp);             // speed (knots)
+    ax25SendString("/A=");            // Altitude (feet). Goes anywhere in the comment area
     snprintf(temp, 7, "%06ld", (long)(meters_to_feet(gps_altitude) + 0.5));
-    ax25_send_string(temp);
-    /* ax25_send_string("/Ti=");
+    ax25SendString(temp);
+    /* ax25SendString("/Ti=");
      snprintf(temp, 6, "%d", sensors_int_lm60());
-     ax25_send_string(temp);
-     ax25_send_string("/Te=");
+     ax25SendString(temp);
+     ax25SendString("/Te=");
      snprintf(temp, 6, "%d", sensors_ext_lm60());
-     ax25_send_string(temp);
-     ax25_send_string("/V=");
+     ax25SendString(temp);
+     ax25SendString("/V=");
      snprintf(temp, 6, "%d", sensors_vin());
-     ax25_send_string(temp);
+     ax25SendString(temp);
      */
-    ax25_send_byte(' ');
-    ax25_send_string(APRS_COMMENT);     // Comment
-    ax25_send_footer();
+    ax25SendByte(' ');
+    ax25SendString(APRS_COMMENT);     // Comment
+    ax25SendFooter();
 
-#if 0
-    ax25_flush_frame();                 // Tell the modem to go
-    afsk_set_frequency(RADIO_FREQ);
-#endif
+    ax25FlushFrame();                 // Tell the modem to go
+    afskSetFrequency(RADIO_FREQ);
 }

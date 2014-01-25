@@ -247,8 +247,10 @@ void systemInit(void)
 
     timersInit();
     pwmTim3_Channel4Init();
-    setPWM_dutycycle(4, 128);
+    setPWM_dutycycle(4, REST_DUTY);
+    afskTimerStop();
     spiInit(SPI1);
+    afskInit();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

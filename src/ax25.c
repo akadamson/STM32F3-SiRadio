@@ -33,7 +33,7 @@ static uint8_t packet[MAX_PACKET];
 static unsigned int packet_size;
 
 // Module functions
-static void update_crc(uint8_t a_bit)
+static void updateCrc(uint8_t a_bit)
 {
     crc ^= a_bit;
 
@@ -43,7 +43,7 @@ static void update_crc(uint8_t a_bit)
         crc = crc >> 1;
 }
 
-static void send_byte(uint8_t a_byte)
+static void sendByte(uint8_t a_byte)
 {
     uint8_t i = 0;
 
@@ -51,7 +51,7 @@ static void send_byte(uint8_t a_byte)
     {
         uint8_t a_bit = a_byte & 1;
         a_byte >>= 1;
-        update_crc(a_bit);
+        updateCrc(a_bit);
 
         if (a_bit)
         {
@@ -76,16 +76,16 @@ static void send_byte(uint8_t a_byte)
 }
 
 // Exported functions
-void ax25_send_byte(uint8_t a_byte)
+void ax25SendByte(uint8_t a_byte)
 {
-    // Wrap around send_byte, but prints debug info
-    send_byte(a_byte);
+    // Wrap around sendByte, but prints debug info
+    sendByte(a_byte);
 #ifdef DEBUG_AX25
     cliPrintF("%c", (char)a_byte);
 #endif
 }
 
-void ax25_send_flag(void)
+void ax25SendFlag(void)
 {
     uint8_t flag = 0x7e;
     int i;
@@ -102,17 +102,17 @@ void ax25_send_flag(void)
     }
 }
 
-void ax25_send_string(const char *string)
+void ax25SendString(const char *string)
 {
     int i;
 
     for (i = 0; string[i]; i++)
     {
-        ax25_send_byte(string[i]);
+        ax25SendByte(string[i]);
     }
 }
 
-void ax25_send_header(const struct s_address *addresses, int num_addresses)
+void ax25SendHeader(const struct s_address *addresses, int num_addresses)
 {
     int i, j;
     packet_size = 0;
@@ -122,31 +122,31 @@ void ax25_send_header(const struct s_address *addresses, int num_addresses)
     // Send flags during TX_DELAY milliseconds (8 bit-flag = 8000/1200 ms)
     for (i = 0; i < TX_DELAY * 3 / 20; i++)
     {
-        ax25_send_flag();
+        ax25SendFlag();
     }
 
     for (i = 0; i < num_addresses; i++)
     {
         // Transmit callsign
         for (j = 0; addresses[i].callsign[j]; j++)
-            send_byte(addresses[i].callsign[j] << 1);
+            sendByte(addresses[i].callsign[j] << 1);
 
         // Transmit pad
         for (; j < 6; j++)
-            send_byte(' ' << 1);
+            sendByte(' ' << 1);
 
         // Transmit SSID. Termination signaled with last bit = 1
         if (i == num_addresses - 1)
-            send_byte(('0' + addresses[i].ssid) << 1 | 1);
+            sendByte(('0' + addresses[i].ssid) << 1 | 1);
         else
-            send_byte(('0' + addresses[i].ssid) << 1);
+            sendByte(('0' + addresses[i].ssid) << 1);
     }
 
     // Control field: 3 = APRS-UI frame
-    send_byte(0x03);
+    sendByte(0x03);
 
     // Protocol ID: 0xf0 = no layer 3 data
-    send_byte(0xf0);
+    sendByte(0xf0);
 
 #ifdef DEBUG_AX25
     // Print source callsign
@@ -195,28 +195,26 @@ void ax25_send_header(const struct s_address *addresses, int num_addresses)
 #endif
 }
 
-void ax25_send_footer(void)
+void ax25SendFooter(void)
 {
     // Save the crc so that it can be treated it atomically
     uint16_t final_crc = crc;
 
     // Send the CRC
-    send_byte(~(final_crc & 0xff));
+    sendByte(~(final_crc & 0xff));
     final_crc >>= 8;
-    send_byte(~(final_crc & 0xff));
+    sendByte(~(final_crc & 0xff));
 
     // Signal the end of frame
-    ax25_send_flag();
+    ax25SendFlag();
 #ifdef DEBUG_AX25
     cliPrint("\n");
 #endif
 }
 
-void ax25_flush_frame(void)
+void ax25FlushFrame(void)
 {
     // Key the transmitter and send the frame
-#if 0
-    afsk_send(packet, packet_size);
-    afsk_start();
-#endif
+    afskSend(packet, packet_size);
+    afskStart();
 }
