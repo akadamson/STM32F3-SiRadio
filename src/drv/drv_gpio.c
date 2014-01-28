@@ -9,7 +9,7 @@
 
 void gpioInit(void)
 {
-#ifdef DEBUG_MODEM
+#ifdef DEBUG_TIMING
     GPIO_InitTypeDef GPIO_InitStructure;
 
     /* TIM3_CH2_CLK Clocks enable */

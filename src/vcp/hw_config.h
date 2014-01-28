@@ -45,7 +45,6 @@
 #define USB_DP_PORT             GPIOA
 
 //#define DISCOVERY
-
 #ifdef DISCOVERY
 #define USB_DISCONNECT_PIN      GPIO_Pin_12
 #else
@@ -73,16 +72,17 @@ uint32_t CDC_Receive_DATA(uint8_t *recvBuf, uint32_t len);       // HJI
 uint8_t usbIsConfigured(void);  // HJI
 uint8_t usbIsConnected(void);   // HJI
 
-typedef enum {
-  eVCPConnectReset,
-  eVCPConnectData,
-  eVCPConnectNoData
+typedef enum
+{
+    eVCPConnectReset,
+    eVCPConnectData,
+    eVCPConnectNoData
 } tVCPConnectMode;
+
 void SetVCPConnectMode(tVCPConnectMode mode);
 tVCPConnectMode GetVCPConnectMode(void);
 
 /* External variables --------------------------------------------------------*/
-
 extern __IO uint32_t receiveLength;  // HJI
 extern __IO uint32_t packetSent;     // HJI
 

@@ -179,8 +179,6 @@ void cliCom(void)
             ///////////////////////////////
 
         case 's': // Not Used
-            cliPrint("TX off\n");
-            si446xPTTOff();
 
             cliQuery = 'x';
             validCliCommand = false;
@@ -189,8 +187,6 @@ void cliCom(void)
              ///////////////////////////////
 
         case 't': // Not Used
-            cliPrint("TX on\n");
-            si446xPTTOn();
 
             cliQuery = 'x';
             validCliCommand = false;

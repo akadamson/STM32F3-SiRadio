@@ -16,8 +16,28 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 uint8_t execUpCount = 0;
+static int32_t next_aprs = 0;
+
+#define VALID_POS_TIMEOUT 2000
+
 
 /* Private functions ---------------------------------------------------------*/
+
+#if 1
+static void getPos(void)
+{
+    bool valid_pos = false;
+    uint32_t timeout = millis();
+
+    do
+    {
+        if (uartAvailable())
+            valid_pos = gpsDecode((char)uartRead());
+
+    } while((millis() - timeout < VALID_POS_TIMEOUT) && !valid_pos);
+}
+
+#endif
 
 /**
   * @brief  Main program.
@@ -70,6 +90,25 @@ int main(void)
          - Reload Value should not exceed 0xFFFFFF
      */
 
+#if 1
+    if (APRS_SLOT >= 0)
+    {
+        do
+        {
+/*
+            while (!uartAvailable())
+                sleep();
+*/
+        } while (!gpsDecode((char)uartRead()));
+
+        next_aprs = millis() + 1000 * (APRS_PERIOD - (gps_seconds + APRS_PERIOD - APRS_SLOT) % APRS_PERIOD);
+    }
+    else
+    {
+        next_aprs = millis();
+    }
+#endif
+
     while (1)
     {
         //evrCheck();
@@ -79,6 +118,25 @@ int main(void)
         {
             ;
         }
+
+#if 1
+        if ((int32_t)(millis() - next_aprs) >= 0)
+        {
+            getPos();
+            aprsSend();
+            next_aprs += APRS_PERIOD * 1000L;
+
+            while(afskBusy())
+                ;
+
+            //sleep();
+#if DEBUG_MODEM
+            afskDebug();
+#endif
+        }
+
+        //sleep();
+#else
 
         ///////////////////////////////
 
@@ -116,10 +174,12 @@ int main(void)
             deltaTime50Hz    = currentTime - previous50HzTime;
             previous50HzTime = currentTime;
 
+#if 1
             while (uartAvailable())
             {
                 gpsDecode((char)uartRead());
             }
+#endif
 
             executionTime50Hz = micros() - currentTime;
         }
@@ -180,6 +240,7 @@ int main(void)
 
             executionTime1Hz = micros() - currentTime;
         }
+#endif
     }
 }
 

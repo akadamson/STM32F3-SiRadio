@@ -236,7 +236,7 @@ void systemInit(void)
     SysTick_Config(SystemCoreClock / 1000);
 
     //checkFirstTime(false);
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);  // 2 bits for pre-emption priority, 2 bits for subpriority
+    //NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);  // 2 bits for pre-emption priority, 2 bits for subpriority
 
     cliInit();
     uartInit();

@@ -377,14 +377,17 @@ void ERR_Callback(void)
 //extern tRingBuffer RingBufferUSBTX;
 void SetVCPConnectMode(tVCPConnectMode mode)
 {
-    if(VCPconnectMode != mode) {
+    if (VCPconnectMode != mode)
+    {
         //printUSART("\r\nVCPConnectMode changed from %d to %d at time %u, rbw %d rbr %d\r\n",
-        //	VCPconnectMode, mode, micros(), RingBufferUSBTX.Write, RingBufferUSBTX.Read);
+        //  VCPconnectMode, mode, micros(), RingBufferUSBTX.Write, RingBufferUSBTX.Read);
     }
+
     VCPconnectMode = mode;
 
-    if(usbIsConnected()) {
-      packetSent = 0;
+    if (usbIsConnected())
+    {
+        packetSent = 0;
     }
 }
 

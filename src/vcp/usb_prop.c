@@ -34,6 +34,11 @@
 #include "usb_pwr.h"
 #include "hw_config.h"
 
+#define printUSART(x) // ala42
+//#define printUSART uartPrintF // aka if needed use this version and comment out above
+static unsigned int vcpBootBlockTime;
+extern uint32_t millis(void);
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -120,7 +125,7 @@ ONE_DESCRIPTOR String_Descriptor[4] =
 *******************************************************************************/
 void Virtual_Com_Port_init(void)
 {
-
+    printUSART("\r\nVirtual_Com_Port_init"); // ala42
     /* Update the serial number string descriptor with the data from the unique
     ID*/
     Get_SerialNum();
@@ -145,6 +150,9 @@ void Virtual_Com_Port_init(void)
 *******************************************************************************/
 void Virtual_Com_Port_Reset(void)
 {
+    printUSART("\r\nVirtual_Com_Port_Reset"); // ala42
+    vcpBootBlockTime = millis();
+
     /* Set Virtual_Com_Port DEVICE as not configured */
     pInformation->Current_Configuration = 0;
 
@@ -199,6 +207,8 @@ void Virtual_Com_Port_Reset(void)
 *******************************************************************************/
 void Virtual_Com_Port_SetConfiguration(void)
 {
+    printUSART("\r\n Virtual_Com_Port_SetConfiguration"); // ala42
+
     DEVICE_INFO *pInfo = &Device_Info;
 
     if (pInfo->Current_Configuration != 0)
@@ -217,6 +227,8 @@ void Virtual_Com_Port_SetConfiguration(void)
 *******************************************************************************/
 void Virtual_Com_Port_SetDeviceAddress(void)
 {
+    printUSART("\r\n Virtual_Com_Port_SetDeviceAddress"); // ala42
+
     bDeviceState = ADDRESSED;
 }
 
@@ -229,6 +241,8 @@ void Virtual_Com_Port_SetDeviceAddress(void)
 *******************************************************************************/
 void Virtual_Com_Port_Status_In(void)
 {
+    printUSART("\r\n Virtual_Com_Port_Status_In"); // ala42
+
     if (Request == SET_LINE_CODING)
     {
         Request = 0;
@@ -243,7 +257,9 @@ void Virtual_Com_Port_Status_In(void)
 * Return         : None.
 *******************************************************************************/
 void Virtual_Com_Port_Status_Out(void)
-{}
+{
+    printUSART("\r\n Virtual_Com_Port_Status_Out"); // ala42
+}
 
 /*******************************************************************************
 * Function Name  : Virtual_Com_Port_Data_Setup
@@ -254,7 +270,10 @@ void Virtual_Com_Port_Status_Out(void)
 *******************************************************************************/
 RESULT Virtual_Com_Port_Data_Setup(uint8_t RequestNo)
 {
-  SetVCPConnectMode(eVCPConnectData);
+    printUSART("\r\n Virtual_Com_Port_Data_Setup"); // ala42
+
+    SetVCPConnectMode(eVCPConnectData);
+
     uint8_t    *(*CopyRoutine)(uint16_t);
 
     CopyRoutine = NULL;
@@ -296,7 +315,8 @@ RESULT Virtual_Com_Port_Data_Setup(uint8_t RequestNo)
 *******************************************************************************/
 RESULT Virtual_Com_Port_NoData_Setup(uint8_t RequestNo)
 {
-  SetVCPConnectMode(eVCPConnectNoData);
+    printUSART("\r\n Virtual_Com_Port_NoData_Setup"); // ala42
+    SetVCPConnectMode(eVCPConnectNoData);
 
     if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
     {
@@ -322,6 +342,7 @@ RESULT Virtual_Com_Port_NoData_Setup(uint8_t RequestNo)
 *******************************************************************************/
 uint8_t *Virtual_Com_Port_GetDeviceDescriptor(uint16_t Length)
 {
+    printUSART("\r\n Virtual_Com_Port_GetDeviceDescriptor"); // ala42
     return Standard_GetDescriptorData(Length, &Device_Descriptor);
 }
 
@@ -334,6 +355,20 @@ uint8_t *Virtual_Com_Port_GetDeviceDescriptor(uint16_t Length)
 *******************************************************************************/
 uint8_t *Virtual_Com_Port_GetConfigDescriptor(uint16_t Length)
 {
+    printUSART("\r\n Virtual_Com_Port_GetConfigDescriptor");
+    //printUSART("\r\n Virtual_Com_Port_GetConfigDescriptor len %d", (int)Length); // ala42
+
+#if 0
+
+    if (millis() - vcpBootBlockTime > 1000)
+    {
+        printUSART("\r\n Virtual_Com_Port_GetConfigDescriptor entering bootloader...");
+        //Delay_ms(1000);
+        extern void bootloader(void);
+        bootloader(); // ala42
+    }
+
+#endif
     return Standard_GetDescriptorData(Length, &Config_Descriptor);
 }
 
@@ -346,6 +381,8 @@ uint8_t *Virtual_Com_Port_GetConfigDescriptor(uint16_t Length)
 *******************************************************************************/
 uint8_t *Virtual_Com_Port_GetStringDescriptor(uint16_t Length)
 {
+    printUSART("\r\n Virtual_Com_Port_GetStringDescriptor"); // ala42
+
     uint8_t wValue0 = pInformation->USBwValue0;
 
     if (wValue0 > 4)
@@ -369,6 +406,8 @@ uint8_t *Virtual_Com_Port_GetStringDescriptor(uint16_t Length)
 *******************************************************************************/
 RESULT Virtual_Com_Port_Get_Interface_Setting(uint8_t Interface, uint8_t AlternateSetting)
 {
+    printUSART("\r\n Virtual_Com_Port_Get_Interface_Setting"); // ala42
+
     if (AlternateSetting > 0)
     {
         return USB_UNSUPPORT;
@@ -390,6 +429,8 @@ RESULT Virtual_Com_Port_Get_Interface_Setting(uint8_t Interface, uint8_t Alterna
 *******************************************************************************/
 uint8_t *Virtual_Com_Port_GetLineCoding(uint16_t Length)
 {
+    printUSART("\r\n Virtual_Com_Port_GetLineCoding"); // ala42
+
     if (Length == 0)
     {
         pInformation->Ctrl_Info.Usb_wLength = sizeof(linecoding);
@@ -408,6 +449,8 @@ uint8_t *Virtual_Com_Port_GetLineCoding(uint16_t Length)
 *******************************************************************************/
 uint8_t *Virtual_Com_Port_SetLineCoding(uint16_t Length)
 {
+    printUSART("\r\n Virtual_Com_Port_SetLineCoding"); // ala42
+
     if (Length == 0)
     {
         pInformation->Ctrl_Info.Usb_wLength = sizeof(linecoding);

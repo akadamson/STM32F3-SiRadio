@@ -53,7 +53,7 @@ void TIM2_IRQHandler(void)
 {
     if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
     {
-#ifdef DEBUG_MODEM
+#ifdef DEBUG_TIMING
         GPIO_SetBits(TIM2D_GPIO_PORT, TIM2D_PIN);
 #endif
 
@@ -61,7 +61,7 @@ void TIM2_IRQHandler(void)
 
         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
 
-#ifdef DEBUG_MODEM
+#ifdef DEBUG_TIMING
         GPIO_ResetBits(TIM2D_GPIO_PORT, TIM2D_PIN);
 #endif
     }
